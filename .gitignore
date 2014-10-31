@@ -7,14 +7,16 @@
 *.out
 *.toc
 
+## TeX Maker files for backup
+*.bak
+
 ## Intermediate documents:
 *.dvi
 *-converted-to.*
 # these rules might exclude image files for figures etc.
 # *.ps
 # *.eps
-## *.pdf
-# *tex.bak
+# *.pdf
 
 ## Bibliography auxiliary files (bibtex/biblatex/biber):
 *.bbl
