@@ -4,6 +4,10 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{graphicx}
+\usepackage{ragged2e}
+\usepackage{float}
+%\usepackage{appendix}
+\usepackage{listings}
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
 \author{Fahim Masud Choudhury}
 \title{Improvement of Handoff Performance in Wireless Mesh Networks}
@@ -11,21 +15,30 @@
 \begin{document}
 \maketitle
 \tableofcontents
+\listoffigures
+
 \newpage
 \begin{center}
 \section*{Acknowledgment}
+\justify
+First and foremost, I would like to thank God Almighty for giving me the strength to finish this work. The satisfaction that accompanies the successful completion of this thesis would be incomplete without the mention of people whose ceaseless cooperation made it possible, whose constant guidance and encouragement crown all efforts with success. I am grateful to my honorable project Supervisor Mir Md. Saki Kowsar, Assistant Professor, Department of Computer Science and Engineering, Chittagong University of Engineering and Technology, for the guidance, inspiration and constructive suggestions which were helpful in the preparation of this project. I also convey special thanks and gratitude to Professor Dr. Kaushik Deb, honorable head of the Department of Computer Science and Engineering for his kind advice. I would also like to extend my gratitude to all of my teachers for their valuable guidance in every step of mine during the four years of learning stage. Finally I would like to thank my friends, senior, juniors and the staffs of the department for their valuable suggestion and assistance that has helped in successful completion of the project.
 \end{center}
+
+
 \newpage
 \begin{center}
 \section*{Abstract}
 \end{center}
 
 \chapter{Introduction}
-\section{Introduction}
-\section{Research Motivation}
+\section{Motivation of the Work}
 \section{Contribution of the Work}
-\section{Organization of the Project}
+The objective of this thesis is to evaluate the performance of wireless mesh networks
+using AODV, DSDV and OLSR protocols in terms of different parameters. 
+An improved OLSR protocol is also proposed and it's performance has been analyzed. Finally, different graphs are generated to evaluate the performance with specified parameters.
 
+\section{Organization of the Project}
+The remainder of the report is organized as follows. In the next chapter, an overview of our project related terminologies are explained and contains brief discussion on previous works that is already implemented with their limitations. Chapter 3 describes the working procedure of our proposed system. In Chapter 4, we have illustrated our implementation of the project in details. Chapter 5 focuses on the experimental result of the proposed system. The thesis concludes with a summary of research contributions and future plan of our work in chapter 6. This thesis contains an appendix intended for persons who wish to explore the source code. 
 \chapter{Literature Review}
 
 \section{Wireless Mesh Network}
@@ -61,6 +74,7 @@ and Control network) controller, and many other devices
 
 The architecture of WMNs can be classified into three main groups based on the
 functionality of the nodes.
+
 \subsubsection{Infrastructure/Backbone WMNs}
 Infrastructure/Backbone WMN includes mesh routers that form
 an infrastructure for clients that connect to them. The WMN infrastructure/backbone can be built using various types of radio technology, in addition to the heavily used
@@ -83,6 +97,7 @@ can serve as access points for users in homes and along the roads. Typically, tw
 types of radio are used in the routers, i.e., for backbone communication and for user
 communication. The mesh backbone communication can be established using long-
 range communication techniques including, for example, directional antennas.
+
 \subsubsection{Client WMNs}
 Client meshing provides peer-to-peer networks among client devices.
 In this type of architecture, client nodes constitute the actual network to perform
@@ -139,93 +154,145 @@ anytime anywhere is an efficient solution for information sharing. WMNs are able
 thus, can accomplish all functions provided by ad hoc networking.
 
 \section{Routing Protocols}
-WMNs will be tightly integrated with the Internet, and IP has been accepted as a network layer protocol for many wireless networks including WMNs. However, routing protocols for WMNs are different from those in wired networks and cellular networks. Therefore, we focus our study on routing protocols in this section.
-Since WMNs share common features with adhoc networks, the routing protocols developed for ad hoc networks can be applied to WMNs.
-\subsection{Destination Source Routing Protocol (DSR)}
-\subsection{Destination Sequence Distance Vector Routing Protocol (DSDV)}
+A routing protocol for WMNs can be proactive or reactive. For proactive routing, a routing
+path between two nodes is established before any traffic flow is initiated between them. A
+reactive routing starts to set up a routing path for two nodes only after traffic is generated
+between these two nodes.
+A routing protocol can be static or dynamic depending whether or not the network
+experiences variations in topology, link quality, traffic load, and so on. In a wired network,
+there exist many scenarios where static routing can find many applications. For a multihop
+wireless network like a WMN, routing usually needs to be dynamic owing to node mobility,
+link instability, topology change, traffic variations, etc. Two popular dynamic routing
+schemes are distance vector routing and link state routing, which were proposed for
+wired networks and have become the cornerstone of many dynamic routing protocols of
+MANETs and WMNs.
+
+\subsection{Reactive Protocols}
+Reactive protocols seek to set up routes on-demand. If a node wants to initiate communication with a node to which it has no route, the routing protocol will try to establish such a route.
+Reactive protocol searches for the route in an on-demand 
+manner and set the link in order to send out and accept the 
+packet from a source node to destination node. Route 
+discovery process is used in on demand routing by flooding 
+the route request (RREQ) packets throughout the network.
+Examples of reactive routing protocols are the dynamic 
+source Routing (DSR), ad hoc on-demand distance vector 
+routing (AODV).
+
+
+\subsection{Proactive Protocols}
+Table-driven or proactive routing protocols establish routes in advance, i.e., these
+protocols assume that it is more efficient to determine routes regularly; as soon as a
+node tries to send data packets, the reasonable assumption (hope) is that the route
+needed has already been discovered. They maintain lists of available destinations and
+up-to-date routes to those destinations in the network by sending periodic routing in-
+formation. These information keeps routing tables consistent. Due to having existing
+routes available, when a traffic packet arrives, transmission will occur with no delay.
+As a consequence, these types of protocols could be in principle more efficient with
+respect to time needed to deliver data packets. Some examples of proactive protocols
+are the Better Approach To Mobile Adhoc Networking (B.A.T.M.A.N.) protocol, the
+Optimized Link State Routing (OLSR) protocol and Destination-Sequence Distance
+Vector (DSDV) protocol.
+
 \subsection{Adhoc On-demand Distance Vector Routing Protocol (AODV)}
-\subsection{Hybrid Wireless Mesh Protocol (HWMP)}
+Ad hoc On-Demand Distance Vector (AODV) Routing is a routing protocol for mobile ad hoc networks (MANETs) and other wireless ad hoc networks. The AODV Routing Protocol uses an on-demand approach for finding routes, that is, a route is established only when it is required by a source node for transmitting data packets. It employs destination sequence numbers to identify the most recent path.  In AODV, the source node and the intermediate nodes store the next-hop information corresponding to each flow for data packet transmission. In an on-demand routing protocol, the source node floods the \textit{RouteRequest} packet in the network when a route is not available for the desired destination. It may obtain multiple routes to different destinations from a single \textit{RouteRequest}. The major difference between AODV and other on-demand routing protocols is that it uses a destination sequence number (\textit{DestSeqNum}) to determine an up-to-date path to the destination. A node updates its path information only if the \textit{DestSeqNum} of the current packet received is greater or equal than the last \textit{DestSeqNum} stored at the node with smaller hopcount.
+
+
+\subsection{Destination Sequence Distance Vector Routing Protocol (DSDV)}
+DSDV is a proactive (Table-Driven) unicast routing protocol based on classical
+Bellman-Ford algorithm. Each node in the network has a routing table which contains
+information on all possible destinations within the network that means its a table-driven routing
+scheme. Sequence numbers are used to distinguish stale routes from fresh ones. To maintain
+Consistency, routing table must be updated periodically throughout the network. If two updates
+have same sequence number then the path with smaller metric is used to optimize the path.
+DSDV protocol only supports bi-directional links. Another main disadvantage is even if there is no change in the network topology, there is still traffic overhead.
+It also maintains routes which are never used.
+
+
 \subsection{Optimized Link State Routing Protocol (OLSR)}
+Optimized link state routing (OLSR) is a proactive routing protocol for MANETs.
+This protocol has the benefit of having the routes available when needed because
+of its proactive nature. The underlying mechanism of this protocol is the periodic
+exchange of messages to find routes. Since OLSR reduces the control packets size
+and minimizes flooding of this control traffic, it is known as optimization of a pure
+link state protocol. Moreover, this protocol does not generate extra control traffic in
+response to link breakage or failure. Every node stores the routes to all destinations
+in the network. As a consequence, it is applicable where a large subset of nodes
+are communicating with each other or nodes are changing with time. The protocol is
+specifically appropriate for large and dense networks as more optimization is achieved.
+OLSR works in a completely distributed manner without depending on any central
+entity. A reliable transmission is not needed for its control messages, since sending
+these messages occurs periodically
 
-%\subsubsection{Broadband Home Networking}
-%\subsubsection{Community and Neighborhood Networking}
-%\subsubsection{Enterprise Networking}
-%\subsubsection{Metropolitan Area Networks (MAN)}
-%\subsubsection{Transportation Systems}
-%\subsubsection{Building Automation}
-%\subsubsection{Health and Medical Systems}
-%\subsubsection{Transportation Systems}
-%\subsubsection{Security Surveillance Systems}
 
-%\section{Handoff Management}
-%\subsection{Types of Handoff in Wireless Mesh Network Systems}
-%\subsubsection{Intra-system Handoff}
-%\subsubsection{Inter-system Handoff}
-%\subsubsection{Hard Handoff}
-%\subsubsection{Soft Handoff}
 
-%\newpage
-%\subsection{Conditions of Handoff}
-%\subsection{Objectives of Handoff}
-%\subsection{Types of Handoff}
-%\subsubsection{Link Layer Handoff}
-%\subsubsection{Network Layer Handoff}
 
-\section{Related Work}
+\subsubsection{HELLO Message}
+OLSR makes use of "Hello" messages to find its one hop neighbors and its two hop neighbors through their responses. The sender can then select its multipoint relays (MPR) based on the one hop node that offers the best routes to the two hop nodes. Each node has also an MPR selector set, which enumerates nodes that have selected it as an MPR node. A HELLO message contains:
+\begin{itemize}
+\item the list of addresses of the neighbors to which there exists a valid bi-directional link
+\item the list of addresses of the neighbors which are heard by this node (a HELLO has been received) but the link is not yet validated as bi-directional link. If a node find its own address in a HELLO message, it considers the link to the sender node as bi-directional.
+\end{itemize}
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[scale=.5]{mpr.png}
+\caption{Flooding a packet in a wireless multi-hop network from the center node using MPRs(black)}
+\end{figure}
+
+
+\subsubsection{Topology Control (TC) Message}
+OLSR uses topology control (TC) messages along with MPR forwarding to disseminate neighbor information throughout the network. TC messages are forwarded like usual broadcast messages in the entire network. A TC message is sent periodically by each node in the network to declare its MPR Selector set, i.e., the message contains the list of neighbors who have selected the sender node as a multipoint relay. The sequence number associated to this MPR Selector set is also attached to the list.The information diffused in the network by these TC messages will help each node to build its topology table. A node which has an empty MPR Selector set, i.e., nobody has selected it as a multipoint relay, may not generate any TC message.
+
+\subsubsection{Core Functionality}
+Nodes in the network start working by broadcasting HELLO messages to their
+neighbors to detect direct one-hop neighbors and also two-hop neighbors. Then,
+nodes will try to create and send their TC message in the entire network. These
+messages then allow nodes to update their routing tables for different nodes in the
+network. To construct the routing table of a node, a shortest path algorithm is used. It means that this routing protocol selects shorter paths by applying Dijkstra’s algorithm. Every routing table consists of destination addresses, next nodes along
+the path to the destination, distance from the node to the destination, etc. 
+
+After broadcasting HELLO and TC messages regularly and if the network does
+not change, all nodes have the topological information of the entire network, such
+as distance from different nodes, one-hop neighbors of every node, next node to the
+destination, etc.
+\section{Related Works}
 
 \chapter{Methodology}
-\section{Existing Approaches}
-%\subsection{Routing Based Location Update}
-%\section{Multihash Location Management}
-\section{Existing Methodology }
-\section{Improved Methodology}
+
+\section{Proposed Methodology}
 
 \chapter{Implementation}
-\section{IEEE 802.11 standard}
-
-\section{IEEE 802.11s}
-\subsection*{Description}
-\section{802.11 Mesh Architecture}
-\subsection*{Routing Protocols}
-\section{Network Simulator}
-\subsection{ns-1}
-\subsection{ns-2}
-\subsection{ns-3}
-\section{IEEE 802.11s Model in ns-3}
-\section{Network Simulator 3}
-\subsection{Model Design}
-\subsubsection{Supported Features}
-\subsubsection{Unsupported Features}
-\subsection{Model Implementation}
-\subsection{MAC Layer Routing Model}
-\section{Simulation Environment}
+\section{Implementation Tools}
+\section{Implementation Details}
+\section{Simulation Parameters}
 \section{Simulation Visualization}
 
-\chapter{Experimental Results and Discussion}
-\section{Simulation Output }
-\subsection{Comparison with Traditional Handoff}
-\section{Trace Data Analysis}
-\section{Result Analysis}
-\subsection{Average End-to-End Delay Vs Simulation Time Delay for TCP}
-\subsection{Average End-to-End Delay Vs Simulation Time Delay for UDP}
-\subsection{Average Packet Delivery Ratio Vs Simulation Time for TCP}
-\subsection{Average Packet Delivery Ratio Vs Simulation Time for UDP}
+
+
+\chapter{Simulation Results and Analysis}
+
+\section{Parameters for Evaluating Simulation Model}
+The following parameters are needed for evaluating our simulation:
+\paragraph{Average Throughput}
+Number of bits received divided by the difference between the arrival time of the first packet and the last one.
+\paragraph{Average Packet Delivery Fraction (PDF)}
+Number of packets received divided by the number of packets transmitted.
+\paragraph{Average end-to-end delay}
+ The sum of the delay of all received packets divided by the number of received packets.
+\subsection{Performance Analysis of AODV, DSDV and OLSR Protocol}
+\subsubsection{Packet Delivery Fraction}
+\subsubsection{Throughput}
+\subsubsection{End-to-end Delay}
+
+\subsection{Performance Analysis of OLSR and Proposed OLSR}
+\subsubsection{Packet Delivery Fraction}
+\subsubsection{Throughput}
+\subsubsection{End-to-end Delay}
+
+\section{Overall Performance Analysis}
 
 \chapter{Conclusion}
-\section{Conclusion}
+\section{Findings of the Work}
 \section{Future Improvements}
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 \end{document}
