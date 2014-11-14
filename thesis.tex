@@ -12,13 +12,12 @@
 \usepackage{listings}
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
 \author{Fahim Masud Choudhury}
-\title{Improvement of Handoff Performance in Wireless Mesh Networks}
+\title{Performance Analysis of HWMP, AODV and OLSR Protocol in Wireless Mesh Networks and Improvement of OLSR using NS-3}
 % arara: indent
 \begin{document}
 \maketitle
 \tableofcontents
 \listoffigures
-\listoftables
 
 \newpage
 \begin{center}
@@ -377,57 +376,122 @@ The network model shown above is simulated in PyViz as below:
 \end{figure}
 
 
-
-
-
-
-
-
-
-
 \chapter{Simulation Results and Analysis}
 
 \section{Parameters for Evaluating Simulation Model}
 The following parameters are needed for evaluating our simulation:
-\paragraph{Average Throughput}
+\begin{itemize}
+
+
+\item{\textbf{Average Throughput:}}
 Number of bits received divided by the difference between the arrival time of the first packet and the last one.
-\paragraph{Average Packet Delivery Fraction (PDF)}
+$$Throughput = \frac{Bits\ Received}{timeLastRxPacket - timeFirstTxPacket} $$
+
+\item{\textbf{Average Packet Delivery Fraction (PDF):}}
 Number of packets received divided by the number of packets transmitted.
-\paragraph{Average end-to-end delay}
- The sum of the delay of all received packets divided by the number of received packets.
-\subsection{Performance Analysis of AODV, DSDV and OLSR Protocol}
+$$PDF = \frac{No.\ of\ Packets\ Received}{No.\ of\ Packets\ Transmitted}$$
+\item{\textbf{Average end-to-end Delay:}}
+The sum of the delay of all received packets divided by the number of received packets.
+$$ETE\ Delay =  \frac{\sum\nolimits Delay\ of\ all\ received\ packets\ }{number\ of\ received\ packets}  $$
+\end{itemize}
+
+\newpage
+\subsection{Performance Analysis of HWMP, OLSR and AODV Protocol}
+
 \subsubsection{Packet Delivery Fraction (PDF)}
 
+\begin{figure}[hbtp]
+\centering
+\includegraphics[scale=.7]{Graphs/PDF-vs-nodes.png}
+\caption{Performance Analysis in terms of Packet Delivery Fractions}
+\end{figure}
+In terms of Packet Delivery Fraction, OLSR performs better than HWMP and AODV with the increasing number of nodes. OLSR is particularly suitable for large and dense networks, as the optimization is done using the multipoint relays.
+
+%\newpage
+
 \subsubsection{Throughput}
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[scale=.7]{Graphs/Throghput-vs-nodes.png}
+\caption{Performance Analysis in terms of Throughput}
+\end{figure}
+As HWMP is based on AODV, the throughput remains the same of these two protocols with the increasing number of nodes. Again, OLSR performs better than the other two routing protocols.
+\newpage
+
 \subsubsection{End-to-end Delay}
 
-\subsection{Performance Analysis of OLSR and Proposed OLSR}
+\begin{figure}[hbtp]
+\centering
+\includegraphics[scale=.7]{Graphs/ETE-vs-nodes.png}
+\caption{Performance Analysis in terms of End-to-end Delay}
+\end{figure}
+
+In terms of End-to-end delay, OLSR performs better than HWMP and AODV. In OLSR, the optimization is done using the multipoint relays. As the number of nodes increase, number of MPRs also increases. These increased MPRs can optimize the network performance.
+
+
+\subsection{Performance Analysis of OLSR and Improved OLSR}
 \subsubsection{Packet Delivery Fraction}
+\begin{figure}[hbtp]
+\centering
+\includegraphics[scale=.7]{Graphs/OLSR-pdf-vs-nodes.png}
+\caption{Comparison of PDF between Original OLSR and Improved OLSR}
+\end{figure}
+
+In terms of Packet Delivery Ratio, our improved OLSR performs well when the node number increases. As more number of packets get the chance to reach the destination, PDF also increases. 
+
+\newpage
+
 \subsubsection{Throughput}
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[scale=.7]{Graphs/OLSR-throughput-vs-nodes.png}
+\caption{Comparison of Throughput between Original OLSR and Improved OLSR}
+\end{figure}
+
+In terms of Throughput, our improved OLSR performs better than the original one. The number of packets that reach the destination is higher in our method. So, the throughput also increases.
+
+
+
 \subsubsection{End-to-end Delay}
 
+\begin{figure}[hbtp]
+\centering
+\includegraphics[scale=.7]{Graphs/OLSR-ete-vs-nodes.png}
+\caption{Comparison of End-to-end Delay between Original OLSR and Improved OLSR}
+\end{figure}
+
+In terms of End-to-end delay, original OLSR performs better than our proposed method. As the packets get second chance to reach to the destination, the end-to-end delay increases in our method. 
+
+
+\newpage
 \section{Overall Performance Analysis}
 % Please add the following required packages to your document preamble:
 % \usepackage{multirow}
 \begin{table}[h]
-\centering
 \begin{tabular}{|c|c|c|c|c|}
 \hline
 \multicolumn{1}{|l|}{Protocol} & No. of Nodes & Avg. Throughput (Kbps) & Avg. ETE Delay (ms) & \multicolumn{1}{l|}{Avg. PDF (\%)} \\ \hline
-\multirow{3}{*}{HWMP}          & 4            & 8.48672                & 0.954314            & 100                                \\ \cline{2-5} 
-                               & 9            & 8.48672                & 21.2756             & 100                                \\ \cline{2-5} 
-                               & 16           & 8.48672                & 13.3219             & 89.16                              \\ \hline
-\multirow{3}{*}{OLSR}          & 4            & 8.48982                & 0.818964            & 100                                \\ \cline{2-5} 
-                               & 9            & 8.48855                & 18.4553             & 100                                \\ \cline{2-5} 
-                               & 16           & 8.48855                & 5.82103             & 94.87                              \\ \hline
-\multirow{3}{*}{AODV}          & 4            & 8.48672                & 24.5282             & 100                                \\ \cline{2-5} 
-                               & 9            & 8.48672                & 27.7124             & 100                                \\ \cline{2-5} 
-                               & 16           & 8.48672                & 47.7594             & 93.3                               \\ \hline
+\multirow{3}{*}{HWMP} & 17 & 8.48672 & 0.954314 & 100 \\ \cline{2-5} 
+ & 27 & 8.48672 & 21.2756 & 100 \\ \cline{2-5} 
+ & 41 & 8.48672 & 13.3219 & 89.16 \\ \hline
+\multirow{3}{*}{OLSR} & 17 & 8.48982 & 0.818964 & 100 \\ \cline{2-5} 
+ & 27 & 8.48855 & 18.4553 & 100 \\ \cline{2-5} 
+ & 41 & 8.48855 & 5.82103 & 94.87 \\ \hline
+\multirow{3}{*}{AODV} & 17 & 8.48672 & 24.5282 & 100 \\ \cline{2-5} 
+ & 27 & 8.48672 & 27.7124 & 100 \\ \cline{2-5} 
+ & 41 & 8.48672 & 47.7594 & 93.3 \\ \hline
+\multirow{3}{*}{\begin{tabular}[c]{@{}c@{}}Improved\\ OLSR\end{tabular}} & 17 & 8.59482 & 3.02356 & 100 \\ \cline{2-5} 
+ & 27 & 8.59482 & 25.20356 & 100 \\ \cline{2-5} 
+ & 41 & 8.59482 & 18.4553 & 96.8 \\ \hline
 \end{tabular}
 \caption{Overall Performance Analysis}
 \label{Overall Performance Analysis}
+
 \end{table}
 
+From the above information, it is clearly shown that OLSR protocol performs better than HWMP and AODV with different network size. However, our improved OLSR protocol is definitely performs better than original OLSR in terms of Packet Delivery Ratio and Throughput.
 
 \chapter{Conclusion}
 \section{Findings of the Work}
