@@ -6,6 +6,8 @@
 \usepackage{graphicx}
 \usepackage{ragged2e}
 \usepackage{float}
+\usepackage{booktabs}
+\usepackage{multirow}
 %\usepackage{appendix}
 \usepackage{listings}
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
@@ -16,6 +18,7 @@
 \maketitle
 \tableofcontents
 \listoffigures
+\listoftables
 
 \newpage
 \begin{center}
@@ -28,12 +31,17 @@ First and foremost, I would like to thank God Almighty for giving me the strengt
 \newpage
 \begin{center}
 \section*{Abstract}
+\justify
+Wireless Mesh Networks (WMNs) are a radio-based network technology that has gained considerable importance in network research community. It is a multi-hop wireless access network where nodes can act both as a host as well as a router. One of the factors that influence the performance of WMNs is the underlying routing protocol used. Since implementation of wireless routing protocols in a real test bed is difficult, hence, simulation environment is being considered for performance evaluation of a routing protocol in a wireless scenario. Recently, a new network simulator called NS-3, which is in its developing stage, demands a great potential (as claimed by the developers group) for performance analysis of different routing protocols. In this project we aim to implement and analyze the performance of Hybrid Wireless Mesh Protocol (HWMP), Optimized Link State Routing Protocol (OLSR) and Ad hoc On-Demand Distance Vector (AODV) routing protocol in Network Simulator 3 (ns-3). An improved OLSR protocol is also proposed and its performance has been measured. Finally, extensive simulations have been carried out for calculation of Throughput, Packet Delivery Fraction (PDF) and End-to-end delay.
+
 \end{center}
 
 \chapter{Introduction}
 \section{Motivation of the Work}
+Wireless mesh networks have recently gained a lot of popularity due to their rapid deployment and instant communication capabilities. These networks comprise of somewhat static multi-radio Mesh Routers, which essentially provide connectivity between the mobile single-radio mesh clients. Special routing protocols are employed, which facilitate routing between the mesh routers as well as between the mesh routers and the mobile clients. The routing (or path selection) protocol is used to discover and maintain multi-hop paths in the mesh network. There have been much work going on in routing protocols. At present, almost 70 routing protocols have been proposed for WMNs. But few of these have supports in ns-3. So, the performance analysis of these ns-3 supported routing protocols is essential to simulate the network. Besides, OLSR  protocol is a widely used routing protocols for MANETs and WMNs. It is also implemented in ns-3. So the performance analysis of OLSR and improving this protocol is also a demanding task.
+
 \section{Contribution of the Work}
-The objective of this thesis is to evaluate the performance of wireless mesh networks
+The objective of this project is to evaluate the performance of wireless mesh networks
 using AODV, DSDV and OLSR protocols in terms of different parameters. 
 An improved OLSR protocol is also proposed and it's performance has been analyzed. Finally, different graphs are generated to evaluate the performance with specified parameters.
 
@@ -193,19 +201,39 @@ are the Better Approach To Mobile Adhoc Networking (B.A.T.M.A.N.) protocol, the
 Optimized Link State Routing (OLSR) protocol and Destination-Sequence Distance
 Vector (DSDV) protocol.
 
+\subsection{Hybrid Wireless Mesh Protocol (HWMP) }
+The Hybrid Wireless Mesh Protocol (HWMP) is a mesh
+routing protocol inspired by AODV and tree-routing. It is
+believed that the combination of reactive (on-demand) and
+proactive elements of HWMP enables efficient path selection
+in a wide variety of mesh networks. HWMP uses a common
+set of protocol primitives, generation and processing rules
+adapted from Ad Hoc On Demand Distance Vector Protocol for MAC addressing and link metric awareness. HWMP
+supports two modes of operation depending of configuration.
+Note that these modes are not exclusive and can be used
+concurrently.
+
+In the on-demand mode the path discovery starts when a
+source mesh station has has a data to transmit to unknown
+destination. It broadcasts a Path Request (PREQ) man-
+agement frame for that destination. Each station, receiving
+PREQ creates a route to a source, updates metric and for-
+wards it. If the station has a valid routing information to a
+destination or the station is the destination itself, it gener-
+ates a Path Reply (PREP) management frame.
+
+In the proactive mode of operation, a single mesh station is
+configured to be a path tree root and it broadcasts PREQs
+periodically. Each station receiving a proactive PREQ up-
+dates it path to root and answers to it by PREP always or
+when it has data to send (depends on the flags of the PREQ).
+Due to this, every station knows route to tree root and root
+knows a route to every mesh station. If direct route to des-
+tination is unknown, data will be forwarded to root which
+is responsible to forward it to the final destination.
+
 \subsection{Adhoc On-demand Distance Vector Routing Protocol (AODV)}
 Ad hoc On-Demand Distance Vector (AODV) Routing is a routing protocol for mobile ad hoc networks (MANETs) and other wireless ad hoc networks. The AODV Routing Protocol uses an on-demand approach for finding routes, that is, a route is established only when it is required by a source node for transmitting data packets. It employs destination sequence numbers to identify the most recent path.  In AODV, the source node and the intermediate nodes store the next-hop information corresponding to each flow for data packet transmission. In an on-demand routing protocol, the source node floods the \textit{RouteRequest} packet in the network when a route is not available for the desired destination. It may obtain multiple routes to different destinations from a single \textit{RouteRequest}. The major difference between AODV and other on-demand routing protocols is that it uses a destination sequence number (\textit{DestSeqNum}) to determine an up-to-date path to the destination. A node updates its path information only if the \textit{DestSeqNum} of the current packet received is greater or equal than the last \textit{DestSeqNum} stored at the node with smaller hopcount.
-
-
-\subsection{Destination Sequence Distance Vector Routing Protocol (DSDV)}
-DSDV is a proactive (Table-Driven) unicast routing protocol based on classical
-Bellman-Ford algorithm. Each node in the network has a routing table which contains
-information on all possible destinations within the network that means its a table-driven routing
-scheme. Sequence numbers are used to distinguish stale routes from fresh ones. To maintain
-Consistency, routing table must be updated periodically throughout the network. If two updates
-have same sequence number then the path with smaller metric is used to optimize the path.
-DSDV protocol only supports bi-directional links. Another main disadvantage is even if there is no change in the network topology, there is still traffic overhead.
-It also maintains routes which are never used.
 
 
 \subsection{Optimized Link State Routing Protocol (OLSR)}
@@ -256,16 +284,104 @@ not change, all nodes have the topological information of the entire network, su
 as distance from different nodes, one-hop neighbors of every node, next node to the
 destination, etc.
 \section{Related Works}
+Simulation is one of the important tool for assessing the
+performance of routing protocols in a Wireless scenario. Till
+date, the performance evaluation of most ad hoc routing
+protocols has been carried out in a simulation test bed using
+NS-2. Recently, a new network simulator called NS-3 which is in its developing stage, demands a great
+potential (as claimed by the developers group) for performance analysis of different routing protocols [5].
+The performance analysis of AODV in WMNs has been done using ns-3 [6]. OLSR protocol is also a comparatively newer protocol for mobile ad hoc networks [7]. Performance of OLSR protocol is analyzed in [8] and [9]. An improved OLSR protocol which is simulated under ns-3 is also proposed in [10]. 
 
 \chapter{Methodology}
 
 \section{Proposed Methodology}
 
 \chapter{Implementation}
+
 \section{Implementation Tools}
+The necessary tools to implement this system can be divided in to two categories-Hardware \& Software as described below:
+\begin{itemize}
+\item 
+Hardware Requirements
+\begin{itemize}
+\item 
+Personal Computer with basic configuration
+\end{itemize}
+\item 
+Software Tools
+\begin{itemize}
+\item 
+Operating System: Ubuntu 14.04.1 LTS
+\item 
+Network Simulator 3 version 3.21
+\item 
+NetAnim
+\item 
+PyViz
+\item 
+Wireshark
+\item 
+Flow Monitor
+\item 
+GNU Plot
+\end{itemize}
+\end{itemize}
 \section{Implementation Details}
+As discussed in the previous chapter, different routing protocols have been implemented in NS-3 to analyze the performance through experiments. Modification of OLSR has been added to NS-3 source code and it has been recompiled to see the changes. 
+
 \section{Simulation Parameters}
+\begin{itemize}
+\item 
+Number of Nodes: 17, 27, 41
+\item 
+Simulation Time: 120 seconds
+\item 
+Mobility Model: RandomWalk2d 
+\item 
+Routing Protocol: HWMP, AODV, OLSR
+\item 
+Size of packets: 1024 bytes
+\item 
+Data Rate of Point to Point links: 100Mbps
+\item
+Delay in Point to Point links: 10ms
+\item 
+Data Rate of CSMA connection: 100Mbps
+\item
+Delay in CSMA connection: 6560ns
+\item
+Node Distance: 40 meters
+\end{itemize}
+
 \section{Simulation Visualization}
+The network model used in our simulation is shown in Figure 4.1. The mesh backbone size varies when mesh routers are added in the network. The link between Access Point and Mesh Router is a CSMA link. Mesh Router/Gateway and Internet are connected with Point to Point link. All other connections are wireless.
+\begin{figure}[hbtp]
+\centering
+\includegraphics[scale=.5]{Network-Model.png}
+\caption{Network Model for Simulation}
+\end{figure}
+\newpage
+
+The network model shown above is simulated in PyViz as below:
+\begin{figure}[hbtp]
+\centering
+\includegraphics[scale=.4]{mesh-2x2.png}
+\caption{Network Model with 4 Mesh Backbone Router}
+\end{figure}
+
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[scale=.45]{mesh-2x2-working.png}
+\caption{Data Connectivity across the Network}
+\end{figure}
+
+
+
+
+
+
+
 
 
 
@@ -280,7 +396,8 @@ Number of packets received divided by the number of packets transmitted.
 \paragraph{Average end-to-end delay}
  The sum of the delay of all received packets divided by the number of received packets.
 \subsection{Performance Analysis of AODV, DSDV and OLSR Protocol}
-\subsubsection{Packet Delivery Fraction}
+\subsubsection{Packet Delivery Fraction (PDF)}
+
 \subsubsection{Throughput}
 \subsubsection{End-to-end Delay}
 
@@ -290,6 +407,27 @@ Number of packets received divided by the number of packets transmitted.
 \subsubsection{End-to-end Delay}
 
 \section{Overall Performance Analysis}
+% Please add the following required packages to your document preamble:
+% \usepackage{multirow}
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\multicolumn{1}{|l|}{Protocol} & No. of Nodes & Avg. Throughput (Kbps) & Avg. ETE Delay (ms) & \multicolumn{1}{l|}{Avg. PDF (\%)} \\ \hline
+\multirow{3}{*}{HWMP}          & 4            & 8.48672                & 0.954314            & 100                                \\ \cline{2-5} 
+                               & 9            & 8.48672                & 21.2756             & 100                                \\ \cline{2-5} 
+                               & 16           & 8.48672                & 13.3219             & 89.16                              \\ \hline
+\multirow{3}{*}{OLSR}          & 4            & 8.48982                & 0.818964            & 100                                \\ \cline{2-5} 
+                               & 9            & 8.48855                & 18.4553             & 100                                \\ \cline{2-5} 
+                               & 16           & 8.48855                & 5.82103             & 94.87                              \\ \hline
+\multirow{3}{*}{AODV}          & 4            & 8.48672                & 24.5282             & 100                                \\ \cline{2-5} 
+                               & 9            & 8.48672                & 27.7124             & 100                                \\ \cline{2-5} 
+                               & 16           & 8.48672                & 47.7594             & 93.3                               \\ \hline
+\end{tabular}
+\caption{Overall Performance Analysis}
+\label{Overall Performance Analysis}
+\end{table}
+
 
 \chapter{Conclusion}
 \section{Findings of the Work}
